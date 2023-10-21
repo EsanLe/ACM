@@ -1,4 +1,8 @@
-const int ten[4]={1,10,100.1000};
+#include <iostream>
+using namespace std;
+
+
+const int ten[4]={1,10,100,1000};
 const int maxl=1000;
 struct BigNumber
 {
@@ -11,7 +15,7 @@ struct BigNumber
 		for(i=1;i<maxl;i++)d[i]=0;
 		for(i=len-1;i>=0;i--)
 		{
-			j=(len-i-1)/4+1；
+			j=(len-i-1)/4+1;
 			k=(len-i-1)%4;
 			d[j]+=ten[k]*(s[i]-'0');
 
@@ -62,7 +66,7 @@ bool operator <(const BigNumber &a,const BigNumber &b)
 	return false;
 }
 
-bool operator +(const BigNumber &a,const BigNumber &b)
+BigNumber operator +(const BigNumber &a,const BigNumber &b)
 {
 	BigNumber c;
 	c.d[0]=max(a.d[0],b.d[0]);
@@ -80,7 +84,8 @@ bool operator +(const BigNumber &a,const BigNumber &b)
 	}
 	return c;
 }
-bool operator -(const BigNumber &a,const BigNumber &b)
+
+BigNumber operator -(const BigNumber &a,const BigNumber &b)
 {
 	BigNumber c;
 	c.d[0]=a.d[0];
@@ -95,7 +100,7 @@ bool operator -(const BigNumber &a,const BigNumber &b)
 	return c;
 }
 
-bool operator *(const BigNumber &a,const BigNumber &b)
+BigNumber operator *(const BigNumber &a,const BigNumber &b)
 {
 	BigNumber c;
 	c.d[0]=a.d[0]+b.d[0];
@@ -115,9 +120,9 @@ bool operator *(const BigNumber &a,const BigNumber &b)
 	return c;
 }
 
-bool samller(const BigNumber &a,const BigNumber &b,int delta)
+bool smaller(const BigNumber &a,const BigNumber &b,int delta)
 {
-	if(a.d[0]delta!=b.d[0])return a.d[0]+delta<b.d[0];
+	if(a.d[0]+delta!=b.d[0])return a.d[0]+delta<b.d[0];
 	int i;
 	for(i=a.d[0];i>0;i--)
 	{
@@ -126,7 +131,7 @@ bool samller(const BigNumber &a,const BigNumber &b,int delta)
 			return a.d[i]<b.d[i+delta];
 		}
 	}
-	return true;
+	return false;
 }
 
 void Minus(BigNumber &a,const BigNumber &b,int delta)
@@ -141,7 +146,7 @@ void Minus(BigNumber &a,const BigNumber &b,int delta)
 	while((a.d[0]>1)&&a.d[a.d[0]]==0)--a.d[0];
 }
 
-bool operator *(const BigNumber &a,const int &k)
+BigNumber operator *(const BigNumber &a,const int &k)
 {
 	BigNumber c;
 	c.d[0]=a.d[0];
@@ -161,7 +166,7 @@ bool operator *(const BigNumber &a,const int &k)
 	return c;
 }
 
-bool operator /(const BigNumber &a,const BigNumber &b)
+BigNumber operator /(const BigNumber &a,const BigNumber &b)
 {
 	BigNumber c;
 	d=a;
@@ -195,8 +200,24 @@ bool operator ==(const BigNumber &a,const BigNumber &b)
 	if(a.d[0]!=b.d[0])return false;
 	for(i=1;i<=a.d[0];++i)
 	{
-		if(a.d[i]1=b.d[i]);
-		return false;
+		if(a.d[i]!=b.d[i]) return false;
 	}
 	return true;
+}
+
+int main(int argc, char *argv[]) {
+   	// Redirect stdio and stdout to file
+	if ( argc == 3 ) {
+		freopen(argv[1], "r", stdin);
+		freopen(argv[2], "w", stdout);
+	}
+
+    string a, b;
+    while (cin >> a >> b) { // 注意 while 处理多个 case
+          BigNumber aBig = BigNumber(a);
+          BigNumber bBig = BigNumber(b);
+          BigNumber sum = aBig + bBig;
+          bool issmaller = smaller(aBig, bBig, 0);
+          cout << issmaller << endl;      
+    }
 }
